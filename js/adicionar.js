@@ -8,13 +8,19 @@ function adicionarPaciente(event) {
     var form = document.querySelector("#form-adicionar");
 
     var paciente = obterValoresForm(form);
-
+    
+    erros = validacaoPaciente(paciente);
+    
+    ul = document.querySelector("#mensagens-erro");
+    
+    if(erros.length>0){
+        exibirErros(erros, ul);
+        return;
+    }
     var pacienteTr = montarTr(paciente);
-    console.log(pacienteTr);
 
     document.querySelector("#tabela-pacientes").appendChild(pacienteTr);
-    
-    validacaoImc(pacienteTr);
+    form.reset();
 }
 
 function obterValoresForm(form){
@@ -35,7 +41,7 @@ function montarTr(paciente){
     pacienteTr.appendChild(montarTd(paciente.peso, "info-peso"));
     pacienteTr.appendChild(montarTd(paciente.altura, "info-altura"));
     pacienteTr.appendChild(montarTd(paciente.gordura, "info-gordura"));
-    pacienteTr.appendChild(montarTd(validacaoImc(pacienteTr, paciente.peso, paciente.altura), "info-imc"));
+    pacienteTr.appendChild(montarTd(calculaImc(paciente.peso, paciente.altura), "info-imc"));
 
     return pacienteTr;
 }
@@ -45,4 +51,41 @@ function montarTd(dado, classe){
     td.classList.add(classe);
     td.textContent = dado;
     return td;
+}
+
+function validacaoPaciente(paciente){
+
+    var erros = [];
+
+    if(paciente.nome.length == 0){
+        erros.push("O campo nome não pode ser deixado em branco!");
+    }
+    if(paciente.peso.length == 0){
+        erros.push("O campo peso não deve ser deixado em branco!");
+    }else if(!pesoValido(paciente.peso)){
+        erros.push("O peso inserido não é válido");
+    }
+    if(paciente.altura.length == 0){
+        erros.push("O campo altura não deve ser deixado em branco!");
+    } else  if(!alturaValida(paciente.altura)){
+        erros.push("A altura inserida não é válida");
+    }
+    if(paciente.gordura.length == 0){
+        erros.push("O campo gordura não deve ser deixado em branco!");
+    }
+   
+    return erros;
+}
+
+function exibirErros(erros, ul){
+
+    ul.innerHTML = "";
+
+    erros.forEach(function(erro){
+        var li = document.createElement("li");
+        li.textContent = erro;
+        ul.appendChild(li);
+       });
+        
+    
 }
