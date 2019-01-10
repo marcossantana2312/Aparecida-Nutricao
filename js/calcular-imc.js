@@ -21,9 +21,6 @@ function validacaoImc(pacienteTr){
     }else{
       tdImc.textContent = calculaImc(peso, altura);
     }
-    console.log(calculaImc);
-    console.log(pacientes);
-    
 }
 
 function calculaImc(peso, altura){
